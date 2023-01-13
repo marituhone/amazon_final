@@ -5,7 +5,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import { useStateValue } from './StateProvider';
 function Header() {
-  const[{basket},dispatch] = useStateValue();
+  const[{basket},dispatch] = useStateValue(); 
+  // pulling item from the basket
 
   return (
          <div className='header'>

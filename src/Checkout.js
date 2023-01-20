@@ -3,6 +3,7 @@ import './checkout.css'
 import CheckoutProduct from './CheckoutProduct';
 import { useStateValue } from './StateProvider';
 import Subtotal from './Subtotal';
+import FlipMove from 'react-flip-move';
 
 
 function Checkout() {
@@ -10,6 +11,7 @@ function Checkout() {
 
   return (
     <div className='checkout'>
+       <FlipMove>
         <div className="checkout__left">
         <img
           className="checkout__ad"
@@ -30,6 +32,7 @@ function Checkout() {
     
         </div>
         </div>
+        </FlipMove>
 
         <div className="checkout__right">
           <Subtotal />

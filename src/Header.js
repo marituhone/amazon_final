@@ -35,7 +35,6 @@ function Header() {
                 {!!user && <span>Hello {user?.email}</span>}
                 <span className='header__optionLineTwo'> {user ? "sign out" :"sign in"}</span>
               </div>
-
             </Link>
 
               <div className='header__option'>

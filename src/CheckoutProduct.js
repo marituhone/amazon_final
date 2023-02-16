@@ -3,10 +3,7 @@ import './checkoutproduct.css'
 import { useStateValue } from './StateProvider';
 
 
-
-
 function CheckoutProduct({id,title,price,image,rateing,hideButton}) {
-
 
 const [{ basket }, dispatch] = useStateValue();
 
@@ -17,13 +14,6 @@ const [{ basket }, dispatch] = useStateValue();
             id:id,
         })
     }
-
-
-   
-
-
-
-
 
 
   return (

@@ -9,21 +9,55 @@ import {CardElement , useStripe, useElements } from "@stripe/react-stripe-js"
 import CurrencyFormat from "react-currency-format";
 
 import { calculateTotalPrice } from "./reducer";
-// import axios from "./axios";
+import axios from "./axios";
 import { db } from "./firebase";
 
 
 function Payment() {
   const [{ basket, user }, dispatch] = useStateValue();
+  const history = useHistory()
   const stripe = useStripe();
   const  elements = useElements();
   const [error,setError] = useState(null);
-  const [disabled,setDisabeled] = useState(true)
-  const handelSubmit = e =>{
+  const [disabled,setDisabeled] = useState(true);
+  const [processing,setProcessing] = useState("")
+  const [succeeded,setsucceeded] = useState(false);
+  const [clientSecret,setClientSecret] = useState(true)
+
+  useEffect(() =>          
+  // when ever the basket change it will change the strip and update special strip scerete to  charge customer with the write amount
+  {
+    const getClientSecret = async () => {
+      const response = await axios({
+        method: "post",
+        url: `/payments/create?total=${getBasketTotal(basket) * 100}`, //Stripe espera o total da transação em subunidade de moeda (R$: centavos | US$: cents | £: pence)
+      });
+      setClientSecret(response.data.clientSecret);
+    };
+    getClientSecret();
+  }, [basket]);
+  const handelSubmit =  async (e)=>{
+
+    e.preventDefault();
+    setProcessing(true);
+    const payload = await  stripe.confirmCardPayment(clientSecret,{payment_method:
+    {
+      card:elements.getElement(CardElement)
+    }
+  }).then(({paymentIntent}) =>{
+  
+        setsucceeded(true);
+        setError(null)
+        setProcessing(false)
+        history.replace('/orders')
+ 
+  })
+  paymentintent  = paymentconfirmation 
+
 
   }
 
-  const handleChange = event =>
+  const handleChange =event =>
   {
 //  listen for  changes in card element 
 // display any error if happendle filling the form
@@ -60,7 +94,7 @@ setError(event.error ? event.error.message : "");
                 image={item.image}
                 price={item.price}
                 rateing = {item.rateing}
-                // rating={item.rateing}
+                
               />
             ))}
             
@@ -73,9 +107,9 @@ setError(event.error ? event.error.message : "");
           </div>
           <div className="payment__details">
 
-            <form onSubmit={handelSubmit}>
-                <CardElement onChange={handleChange} />
-                <CardElement onChange={handleChange} />
+            <form onSubmit=''>
+              
+                 <CardElement onChange={handleChange} />
 
                 <div className="payment__priceContainer">
                     <CurrencyFormat
@@ -89,9 +123,13 @@ setError(event.error ? event.error.message : "");
                         displayType={"text"}
                         thousandSeparator={true}
                         prefix={"$"}
-                    /> </div>
+                    /> 
+                    <button  disabled={processing || disabled || succeeded}> <span >{processing ?<p>processing</p>:"buy now"}</span></button>
+                    </div>
+                    {error && <div>{error}</div>}
+                   
                     
-                    </form>
+                    </form> 
 
           </div>
         </div>

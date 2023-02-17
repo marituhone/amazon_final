@@ -56,7 +56,7 @@ const handleSubmit = async (event) => {
       setProcessing(false);
       // history.replace("/orders");
 
-      history.push('/login')
+  history.push('/your-component')
     });
 };
 
